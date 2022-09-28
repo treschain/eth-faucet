@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/crypto"
+	"./crypto"
 )
 
 func TestDecryptKeyfile(t *testing.T) {
