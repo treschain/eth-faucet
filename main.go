@@ -1,7 +1,7 @@
 package main
 
 import (
-	"https://github.com/bladepool/eth-faucet/cmd"
+	"./cmd"
 )
 
 //go:generate npm run build
