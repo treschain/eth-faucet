@@ -12,7 +12,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/negroni"
 
-	"github.com/chainflag/eth-faucet/internal/chain"
+	"https://github.com/bladepool/eth-faucet/internal/chain"
 )
 
 type Limiter struct {

@@ -1,4 +1,4 @@
-module github.com/chainflag/eth-faucet
+module https://github.com/bladepool/eth-faucet
 
 // +heroku goVersion go1.16
 go 1.16

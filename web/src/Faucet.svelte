@@ -68,7 +68,7 @@
               <span class="navbar-item">
                 <a
                   class="button is-white is-outlined"
-                  href="https://github.com/chainflag/eth-faucet"
+                  href="https://https://github.com/bladepool/eth-faucet"
                 >
                   <span class="icon">
                     <i class="fa fa-github" />

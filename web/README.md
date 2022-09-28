@@ -1,6 +1,6 @@
 # eth-faucet-web
 
-This is the Frontend of [eth-faucet](https://github.com/chainflag/eth-faucet) built with Svelte in Vite.
+This is the Frontend of [eth-faucet](https://https://github.com/bladepool/eth-faucet) built with Svelte in Vite.
 
 ## Get started
 

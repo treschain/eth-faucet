@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/chainflag/eth-faucet/cmd"
+	"https://github.com/bladepool/eth-faucet/cmd"
 )
 
 //go:generate npm run build
