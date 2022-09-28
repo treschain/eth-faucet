@@ -10,7 +10,7 @@ import (
 	"os/signal"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/crypto"
+	"./crypto"
 
 	"./internal/chain"
 	"./internal/server"
