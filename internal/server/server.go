@@ -12,8 +12,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/negroni"
 
-	"./internal/chain"
-	"./web"
+	"github.com/chainflag/eth-faucet/internal/chain"
+	"github.com/chainflag/eth-faucet/web"
 )
 
 const AddressKey string = "address"

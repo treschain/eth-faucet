@@ -10,10 +10,10 @@ import (
 	"os/signal"
 	"strings"
 
-	"./crypto"
+	"github.com/ethereum/go-ethereum/crypto"
 
-	"./internal/chain"
-	"./internal/server"
+	"github.com/chainflag/eth-faucet/internal/chain"
+	"github.com/chainflag/eth-faucet/internal/server"
 )
 
 var (
