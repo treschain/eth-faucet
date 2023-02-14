@@ -1,10 +1,10 @@
 # eth-faucet
 
-[![Build](https://github.com/chainflag/eth-faucet/workflows/Go/badge.svg)](https://github.com/chainflag/eth-faucet/actions?query=workflow%3AGo)
-[![Release](https://img.shields.io/github/v/release/chainflag/eth-faucet)](https://github.com/chainflag/eth-faucet/releases)
-[![Report](https://goreportcard.com/badge/github.com/chainflag/eth-faucet)](https://goreportcard.com/report/github.com/chainflag/eth-faucet)
-[![Go](https://img.shields.io/github/go-mod/go-version/chainflag/eth-faucet)](https://go.dev/)
-[![License](https://img.shields.io/github/license/chainflag/eth-faucet)](https://github.com/chainflag/eth-faucet/blob/main/LICENSE)
+[![Build](https://github.com/treschain/eth-faucet/workflows/Go/badge.svg)](https://github.com/treschain/eth-faucet/actions?query=workflow%3AGo)
+[![Release](https://img.shields.io/github/v/release/treschain/eth-faucet)](https://github.com/treschain/eth-faucet/releases)
+[![Report](https://goreportcard.com/badge/github.com/treschain/eth-faucet)](https://goreportcard.com/report/github.com/treschain/eth-faucet)
+[![Go](https://img.shields.io/github/go-mod/go-version/treschain/eth-faucet)](https://go.dev/)
+[![License](https://img.shields.io/github/license/treschain/eth-faucet)](https://github.com/treschain/eth-faucet/blob/main/LICENSE)
 
 The faucet is a web application with the goal of distributing small amounts of Ether in private and test networks.
 
@@ -26,7 +26,7 @@ The faucet is a web application with the goal of distributing small amounts of E
 
 1. Clone the repository and navigate to the app’s directory
 ```bash
-git clone https://github.com/chainflag/eth-faucet.git
+git clone https://github.com/treschain/eth-faucet.git
 cd eth-faucet
 ```
 
@@ -91,13 +91,13 @@ The following are the available command-line flags(excluding above wallet flags)
 ### Docker deployment
 
 ```bash
-docker run -d -p 8080:8080 -e WEB3_PROVIDER=rpc endpoint -e PRIVATE_KEY=hex private key chainflag/eth-faucet:1.1.0
+docker run -d -p 8080:8080 -e WEB3_PROVIDER=rpc endpoint -e PRIVATE_KEY=hex private key treschain/eth-faucet:1.1.0
 ```
 
 or
 
 ```bash
-docker run -d -p 8080:8080 -e WEB3_PROVIDER=rpc endpoint -e KEYSTORE=keystore path -v `pwd`/keystore:/app/keystore -v `pwd`/password.txt:/app/password.txt chainflag/eth-faucet:1.1.0
+docker run -d -p 8080:8080 -e WEB3_PROVIDER=rpc endpoint -e KEYSTORE=keystore path -v `pwd`/keystore:/app/keystore -v `pwd`/password.txt:/app/password.txt treschain/eth-faucet:1.1.0
 ```
 
 ### Heroku deployment

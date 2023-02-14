@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/chainflag/eth-faucet/internal/chain"
+	"github.com/treschain/eth-faucet/internal/chain"
 )
 
 type claimRequest struct {

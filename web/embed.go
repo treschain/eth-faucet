@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-//go:embed public
+go:embed public
 var static embed.FS
 
 func Dist() http.FileSystem {
