@@ -12,7 +12,7 @@ The faucet is a web application with the goal of distributing small amounts of E
 
 * Allow to configure the funding account via private key or keystore
 * Asynchronous processing Txs to achieve parallel execution of user requests
-* Rate limiting by ETH address and IP address as a precaution against spam
+* Rate limiting by TRES address and IP address as a precaution against spam
 * Prevent X-Forwarded-For spoofing by specifying the count of reverse proxies
 
 ## Get started
