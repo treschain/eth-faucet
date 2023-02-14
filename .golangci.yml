@@ -11,12 +11,13 @@ linters-settings:
 linters:
   disable-all: true
   enable:
+    - deadcode
     - gosimple
     - govet
     - ineffassign
+    - varcheck
     - goconst
     - goimports
     - misspell
     - revive
     - unconvert
-    - unused

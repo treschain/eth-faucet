@@ -1,7 +1,6 @@
 package server
 
 import (
-	"errors"
 	"fmt"
 	"net"
 	"net/http"
@@ -12,6 +11,8 @@ import (
 	"github.com/jellydator/ttlcache/v2"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/negroni"
+
+	"github.com/chainflag/eth-faucet/internal/chain"
 )
 
 type Limiter struct {
@@ -32,17 +33,11 @@ func NewLimiter(proxyCount int, ttl time.Duration) *Limiter {
 }
 
 func (l *Limiter) ServeHTTP(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-	address, err := readAddress(r)
-	if err != nil {
-		var mr *malformedRequest
-		if errors.As(err, &mr) {
-			renderJSON(w, claimResponse{Message: mr.message}, mr.status)
-		} else {
-			renderJSON(w, claimResponse{Message: http.StatusText(http.StatusInternalServerError)}, http.StatusInternalServerError)
-		}
+	address := r.PostFormValue(AddressKey)
+	if !chain.IsValidAddress(address, true) {
+		http.Error(w, "invalid address", http.StatusBadRequest)
 		return
 	}
-
 	if l.ttl <= 0 {
 		next.ServeHTTP(w, r)
 		return
@@ -73,7 +68,7 @@ func (l *Limiter) ServeHTTP(w http.ResponseWriter, r *http.Request, next http.Ha
 func (l *Limiter) limitByKey(w http.ResponseWriter, key string) bool {
 	if _, ttl, err := l.cache.GetWithTTL(key); err == nil {
 		errMsg := fmt.Sprintf("You have exceeded the rate limit. Please wait %s before you try again", ttl.Round(time.Second))
-		renderJSON(w, claimResponse{Message: errMsg}, http.StatusTooManyRequests)
+		http.Error(w, errMsg, http.StatusTooManyRequests)
 		return true
 	}
 	return false
@@ -82,6 +77,8 @@ func (l *Limiter) limitByKey(w http.ResponseWriter, key string) bool {
 func getClientIPFromRequest(proxyCount int, r *http.Request) string {
 	if proxyCount > 0 {
 		xForwardedFor := r.Header.Get("X-Forwarded-For")
+		xRealIP := r.Header.Get("X-Real-Ip")
+
 		if xForwardedFor != "" {
 			xForwardedForParts := strings.Split(xForwardedFor, ",")
 			// Avoid reading the user's forged request header by configuring the count of reverse proxies
@@ -90,6 +87,10 @@ func getClientIPFromRequest(proxyCount int, r *http.Request) string {
 				partIndex = 0
 			}
 			return strings.TrimSpace(xForwardedForParts[partIndex])
+		}
+
+		if xRealIP != "" {
+			return strings.TrimSpace(xRealIP)
 		}
 	}
 

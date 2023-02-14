@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -14,6 +15,8 @@ import (
 	"github.com/chainflag/eth-faucet/internal/chain"
 	"github.com/chainflag/eth-faucet/web"
 )
+
+const AddressKey string = "address"
 
 type Server struct {
 	chain.TxBuilder
@@ -82,8 +85,7 @@ func (s *Server) handleClaim() http.HandlerFunc {
 			return
 		}
 
-		// The error always be nil since it has already been handled in limiter
-		address, _ := readAddress(r)
+		address := r.PostFormValue(AddressKey)
 		// Try to lock mutex if the work queue is empty
 		if len(s.queue) != 0 || !s.mutex.TryLock() {
 			select {
@@ -91,11 +93,11 @@ func (s *Server) handleClaim() http.HandlerFunc {
 				log.WithFields(log.Fields{
 					"address": address,
 				}).Info("Added to queue successfully")
-				resp := claimResponse{Message: fmt.Sprintf("Added %s to the queue", address)}
-				renderJSON(w, resp, http.StatusOK)
+				fmt.Fprintf(w, "Added %s to the queue", address)
 			default:
 				log.Warn("Max queue capacity reached")
-				renderJSON(w, claimResponse{Message: "Faucet queue is too long, please try again later"}, http.StatusServiceUnavailable)
+				errMsg := "Faucet queue is too long, please try again later"
+				http.Error(w, errMsg, http.StatusServiceUnavailable)
 			}
 			return
 		}
@@ -106,7 +108,7 @@ func (s *Server) handleClaim() http.HandlerFunc {
 		s.mutex.Unlock()
 		if err != nil {
 			log.WithError(err).Error("Failed to send transaction")
-			renderJSON(w, claimResponse{Message: err.Error()}, http.StatusInternalServerError)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
@@ -114,21 +116,27 @@ func (s *Server) handleClaim() http.HandlerFunc {
 			"txHash":  txHash,
 			"address": address,
 		}).Info("Funded directly successfully")
-		resp := claimResponse{Message: fmt.Sprintf("Txhash: %s", txHash)}
-		renderJSON(w, resp, http.StatusOK)
+		fmt.Fprintf(w, "Txhash: %s", txHash)
 	}
 }
 
 func (s *Server) handleInfo() http.HandlerFunc {
+	type info struct {
+		Account string `json:"account"`
+		Network string `json:"network"`
+		Payout  string `json:"payout"`
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "GET" {
 			http.NotFound(w, r)
 			return
 		}
-		renderJSON(w, infoResponse{
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(info{
 			Account: s.Sender().String(),
 			Network: s.cfg.network,
 			Payout:  strconv.Itoa(s.cfg.payout),
-		}, http.StatusOK)
+		})
 	}
 }

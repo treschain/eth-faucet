@@ -18,7 +18,7 @@ COPY go.* ./
 RUN go mod download
 
 COPY . .
-COPY --from=frontend /frontend-build/dist ./web/dist
+COPY --from=frontend /frontend-build/public ./web/public
 
 RUN go build -o eth-faucet -ldflags "-s -w"
 

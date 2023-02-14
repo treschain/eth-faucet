@@ -1,6 +1,6 @@
 # eth-faucet
 
-[![Build](https://img.shields.io/github/actions/workflow/status/chainflag/eth-faucet/build.yml?branch=main)](https://github.com/chainflag/eth-faucet/actions/workflows/build.yml)
+[![Build](https://github.com/chainflag/eth-faucet/workflows/Go/badge.svg)](https://github.com/chainflag/eth-faucet/actions?query=workflow%3AGo)
 [![Release](https://img.shields.io/github/v/release/chainflag/eth-faucet)](https://github.com/chainflag/eth-faucet/releases)
 [![Report](https://goreportcard.com/badge/github.com/chainflag/eth-faucet)](https://goreportcard.com/report/github.com/chainflag/eth-faucet)
 [![Go](https://img.shields.io/github/go-mod/go-version/chainflag/eth-faucet)](https://go.dev/)
@@ -30,9 +30,9 @@ git clone https://github.com/chainflag/eth-faucet.git
 cd eth-faucet
 ```
 
-2. Bundle Frontend web with Vite
+2. Bundle Frontend web with Rollup
 ```bash
-go generate
+npm run build
 ```
 
 3. Build Go project 
@@ -74,7 +74,7 @@ Then run the faucet application without the wallet command-line flags:
 ```bash
 ./eth-faucet -httpport 8080
 ```
-test
+
 **Optional Flags**
 
 The following are the available command-line flags(excluding above wallet flags):

@@ -1,10 +1,9 @@
 <script>
   import { onMount } from 'svelte';
   import { getAddress } from '@ethersproject/address';
-  import { CloudflareProvider } from '@ethersproject/providers';
   import { setDefaults as setToast, toast } from 'bulma-toast';
 
-  let input = null;
+  let address = null;
   let faucetInfo = {
     account: '0x0000000000000000000000000000000000000000',
     network: 'testnet',
@@ -27,21 +26,6 @@
   });
 
   async function handleRequest() {
-    let address = input;
-    if (address.endsWith('.eth')) {
-      try {
-        const provider = new CloudflareProvider();
-        address = await provider.resolveName(address);
-        if (!address) {
-          toast({ message: 'invalid ENS name', type: 'is-warning' });
-          return;
-        }
-      } catch (error) {
-        toast({ message: error.reason, type: 'is-warning' });
-        return;
-      }
-    }
-
     try {
       address = getAddress(address);
     } catch (error) {
@@ -49,19 +33,15 @@
       return;
     }
 
+    let formData = new FormData();
+    formData.append('address', address);
     const res = await fetch('/api/claim', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        address,
-      }),
+      body: formData,
     });
-
-    let { msg } = await res.json();
+    let message = await res.text();
     let type = res.ok ? 'is-success' : 'is-warning';
-    toast({ message: msg, type });
+    toast({ message, type });
   }
 
   function capitalize(str) {
@@ -76,11 +56,11 @@
       <nav class="navbar">
         <div class="container">
           <div class="navbar-brand">
-            <a class="navbar-item" href="../..">
+            <a class="navbar-item" href=".">
               <span class="icon">
                 <i class="fa fa-bath" />
               </span>
-              <span><b>Tres Chain Faucet</b></span>
+              <span><b>TRES Faucet</b></span>
             </a>
           </div>
           <div id="navbarMenu" class="navbar-menu">
@@ -88,7 +68,7 @@
               <span class="navbar-item">
                 <a
                   class="button is-white is-outlined"
-                  href="https://github.com/treschain/eth-faucet"
+                  href="https://github.com/chainflag/eth-faucet"
                 >
                   <span class="icon">
                     <i class="fa fa-github" />
@@ -115,10 +95,10 @@
             <div class="field is-grouped">
               <p class="control is-expanded">
                 <input
-                  bind:value={input}
+                  bind:value={address}
                   class="input is-rounded"
                   type="text"
-                  placeholder="Enter your address or ENS name"
+                  placeholder="Enter your address"
                 />
               </p>
               <p class="control">
