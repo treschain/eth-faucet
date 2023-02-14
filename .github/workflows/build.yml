@@ -41,7 +41,7 @@ jobs:
           go-version: 1.16
 
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v2
+        uses: golangci/golangci-lint-action@v3
         with:
           version: latest
 
@@ -53,8 +53,8 @@ jobs:
         with:
           node-version: "14"
 
-      - run: npm ci
+      - run: yarn install
         working-directory: web
 
-      - run: npx prettier --check 'src/**/*.{css,html,js,svelte}'
+      - run: yarn prettier --check 'src/**/*.{css,html,js,svelte}'
         working-directory: web

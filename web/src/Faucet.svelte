@@ -1,9 +1,10 @@
 <script>
   import { onMount } from 'svelte';
   import { getAddress } from '@ethersproject/address';
+  import { CloudflareProvider } from '@ethersproject/providers';
   import { setDefaults as setToast, toast } from 'bulma-toast';
 
-  let address = null;
+  let input = null;
   let faucetInfo = {
     account: '0x0000000000000000000000000000000000000000',
     network: 'testnet',
@@ -26,6 +27,21 @@
   });
 
   async function handleRequest() {
+    let address = input;
+    if (address.endsWith('.eth')) {
+      try {
+        const provider = new CloudflareProvider();
+        address = await provider.resolveName(address);
+        if (!address) {
+          toast({ message: 'invalid ENS name', type: 'is-warning' });
+          return;
+        }
+      } catch (error) {
+        toast({ message: error.reason, type: 'is-warning' });
+        return;
+      }
+    }
+
     try {
       address = getAddress(address);
     } catch (error) {
@@ -33,15 +49,19 @@
       return;
     }
 
-    let formData = new FormData();
-    formData.append('address', address);
     const res = await fetch('/api/claim', {
       method: 'POST',
-      body: formData,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        address,
+      }),
     });
-    let message = await res.text();
+
+    let { msg } = await res.json();
     let type = res.ok ? 'is-success' : 'is-warning';
-    toast({ message, type });
+    toast({ message: msg, type });
   }
 
   function capitalize(str) {
@@ -56,7 +76,7 @@
       <nav class="navbar">
         <div class="container">
           <div class="navbar-brand">
-            <a class="navbar-item" href=".">
+            <a class="navbar-item" href="../..">
               <span class="icon">
                 <i class="fa fa-bath" />
               </span>
@@ -95,10 +115,10 @@
             <div class="field is-grouped">
               <p class="control is-expanded">
                 <input
-                  bind:value={address}
+                  bind:value={input}
                   class="input is-rounded"
                   type="text"
-                  placeholder="Enter your address"
+                  placeholder="Enter your address or ENS name"
                 />
               </p>
               <p class="control">
